@@ -8,7 +8,7 @@
 
 Estudantes universitários gastam centenas de reais por semestre em livros e apostilas — muitos dos quais usam apenas uma vez. Ao mesmo tempo, pilhas de livros ficam parados nas prateleiras após a conclusão da disciplina.
 
-O **TrocaLivros** conecta estudantes para que possam trocar ou doar materiais acadêmicos gratuitamente, reduzindo o custo da educação e evitando o desperdício.....
+O **TrocaLivros** conecta estudantes para que possam trocar ou doar materiais acadêmicos gratuitamente, reduzindo o custo da educação e evitando o desperdício.
 
 ---
 
