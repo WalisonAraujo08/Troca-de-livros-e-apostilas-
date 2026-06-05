@@ -1,0 +1,122 @@
+<%- include('../partials/header') %>
+
+<div class="page-detalhe">
+  <div class="container">
+    <a href="/livros" class="back-link">← Voltar para livros</a>
+
+    <% if (query && query.proposta === 'enviada') { %>
+      <div class="alert alert-success">✅ Proposta enviada com sucesso! O dono será notificado.</div>
+    <% } %>
+
+    <div class="detalhe-grid">
+      <!-- Capa -->
+      <div class="detalhe-capa-col">
+        <div class="detalhe-capa">
+          <% if (livro.capa) { %>
+            <img src="<%= livro.capa %>" alt="<%= livro.titulo %>" />
+          <% } else { %>
+            <div class="capa-placeholder big"><span>📕</span></div>
+          <% } %>
+        </div>
+        <div class="detalhe-badges">
+          <span class="badge-modalidade big <%= livro.modalidade %>">
+            <%= livro.modalidade === 'doacao' ? '🎁 Doação gratuita' : '🔄 Para troca' %>
+          </span>
+          <span class="badge-status <%= livro.status %>"><%= livro.status %></span>
+        </div>
+
+        <!-- Favoritar -->
+        <% if (userId && userId !== livro.usuario_id) { %>
+          <form action="/livros/<%= livro.id %>/favoritar" method="POST">
+            <button type="submit" class="btn-fav">♡ Favoritar livro</button>
+          </form>
+        <% } %>
+      </div>
+
+      <!-- Detalhes -->
+      <div class="detalhe-info-col">
+        <div class="detalhe-categoria-badge"><%= livro.categoria %></div>
+        <h1><%= livro.titulo %></h1>
+        <p class="detalhe-autor">por <strong><%= livro.autor || 'Autor não informado' %></strong></p>
+
+        <div class="detalhe-atributos">
+          <div class="atrib">
+            <span class="atrib-label">Condição</span>
+            <span class="badge-condicao <%= livro.condicao %>"><%= livro.condicao %></span>
+          </div>
+          <div class="atrib">
+            <span class="atrib-label">Categoria</span>
+            <span><%= livro.categoria %></span>
+          </div>
+          <div class="atrib">
+            <span class="atrib-label">Publicado em</span>
+            <span><%= new Date(livro.created_at).toLocaleDateString('pt-BR') %></span>
+          </div>
+        </div>
+
+        <% if (livro.descricao) { %>
+          <div class="detalhe-desc">
+            <h3>Sobre o livro</h3>
+            <p><%= livro.descricao %></p>
+          </div>
+        <% } %>
+
+        <!-- Dono -->
+        <div class="detalhe-dono">
+          <div class="dono-avatar"><%= livro.dono_nome.charAt(0).toUpperCase() %></div>
+          <div>
+            <p class="dono-nome"><%= livro.dono_nome %></p>
+            <p class="dono-inst">🏫 <%= livro.dono_inst || '—' %> • <%= livro.dono_curso || '—' %></p>
+          </div>
+        </div>
+
+        <!-- Proposta -->
+        <% if (livro.status === 'disponivel') { %>
+          <% if (!userId) { %>
+            <a href="/auth/login" class="btn-primary btn-lg btn-full">Entrar para propor troca</a>
+          <% } else if (userId === livro.usuario_id) { %>
+            <div class="alert alert-info">Este é o seu livro.</div>
+            <form action="/livros/<%= livro.id %>/deletar" method="POST" onsubmit="return confirm('Deletar este livro?')">
+              <button type="submit" class="btn-danger">🗑 Remover anúncio</button>
+            </form>
+          <% } else if (jaPropôs) { %>
+            <div class="alert alert-info">✅ Você já enviou uma proposta para este livro. Aguarde a resposta!</div>
+          <% } else { %>
+            <div class="proposta-box">
+              <h3>Fazer proposta</h3>
+              <form action="/propostas" method="POST" class="proposta-form">
+                <input type="hidden" name="livro_solicitado_id" value="<%= livro.id %>" />
+
+                <% if (livro.modalidade === 'troca' && meuLivros.length > 0) { %>
+                  <div class="field">
+                    <label for="livro_oferecido_id">Oferecer em troca (opcional)</label>
+                    <select name="livro_oferecido_id" id="livro_oferecido_id">
+                      <option value="">Nenhum — só quero este</option>
+                      <% meuLivros.forEach(ml => { %>
+                        <option value="<%= ml.id %>"><%= ml.titulo %> (<%= ml.condicao %>)</option>
+                      <% }); %>
+                    </select>
+                  </div>
+                <% } %>
+
+                <div class="field">
+                  <label for="mensagem">Mensagem para <%= livro.dono_nome %></label>
+                  <textarea name="mensagem" id="mensagem" rows="3"
+                    placeholder="Ex: Olá! Tenho interesse neste livro. Posso buscar na faculdade..." ></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary btn-full btn-lg">
+                  <%= livro.modalidade === 'doacao' ? '🎁 Solicitar doação' : '🔄 Enviar proposta de troca' %>
+                </button>
+              </form>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="alert alert-info">Este livro não está mais disponível.</div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

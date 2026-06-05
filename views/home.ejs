@@ -1,0 +1,131 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <span class="hero-badge">📚 Plataforma universitária</span>
+      <h1 class="hero-title">
+        Troque livros.<br>
+        <em>Expanda horizontes.</em>
+      </h1>
+      <p class="hero-sub">
+        Conectamos estudantes para trocar e doar livros e apostilas.
+        Economize, conheça pessoas e dê uma nova vida ao seu conhecimento.
+      </p>
+      <div class="hero-actions">
+        <a href="/livros" class="btn-primary btn-lg">Explorar livros</a>
+        <a href="/auth/registro" class="btn-ghost btn-lg">Criar conta grátis →</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="book-stack">
+        <div class="book b1"></div>
+        <div class="book b2"></div>
+        <div class="book b3"></div>
+        <div class="book b4"></div>
+        <div class="book b5"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-num"><%= stats.total_livros %></span>
+      <span class="stat-label">Livros disponíveis</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num"><%= stats.total_usuarios %></span>
+      <span class="stat-label">Estudantes cadastrados</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num"><%= stats.total_trocas %></span>
+      <span class="stat-label">Trocas realizadas</span>
+    </div>
+  </div>
+</section>
+
+<section class="section-recentes">
+  <div class="container">
+    <div class="section-header">
+      <h2>Adicionados recentemente</h2>
+      <a href="/livros" class="link-ver-todos">Ver todos →</a>
+    </div>
+
+    <% if (recentes.length === 0) { %>
+      <div class="empty-state">
+        <span>📖</span>
+        <p>Nenhum livro cadastrado ainda. <a href="/livros/novo">Seja o primeiro!</a></p>
+      </div>
+    <% } else { %>
+      <div class="livros-grid">
+        <% recentes.forEach(livro => { %>
+          <a href="/livros/<%= livro.id %>" class="card-livro">
+            <div class="card-capa">
+              <% if (livro.capa) { %>
+                <img src="<%= livro.capa %>" alt="<%= livro.titulo %>" loading="lazy" />
+              <% } else { %>
+                <div class="capa-placeholder">
+                  <span>📕</span>
+                </div>
+              <% } %>
+              <span class="badge-modalidade <%= livro.modalidade %>">
+                <%= livro.modalidade === 'doacao' ? '🎁 Doação' : '🔄 Troca' %>
+              </span>
+            </div>
+            <div class="card-info">
+              <h3><%= livro.titulo %></h3>
+              <p class="card-autor"><%= livro.autor || 'Autor não informado' %></p>
+              <div class="card-meta">
+                <span class="badge-condicao"><%= livro.condicao %></span>
+                <span class="card-dono">por <%= livro.dono_nome %></span>
+              </div>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<section class="how-works">
+  <div class="container">
+    <h2 class="center-title">Como funciona</h2>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-icon">📝</div>
+        <h3>Cadastre-se</h3>
+        <p>Crie sua conta gratuita com e-mail e dados da sua faculdade.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">📚</div>
+        <h3>Anuncie seus livros</h3>
+        <p>Adicione fotos, descrição e escolha entre troca ou doação.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🤝</div>
+        <h3>Faça uma proposta</h3>
+        <p>Encontrou algo interessante? Envie uma proposta de troca.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🎉</div>
+        <h3>Combine a entrega</h3>
+        <p>O dono aceita, vocês combinam e pronto — leitura nova!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <h2>Pronto para começar?</h2>
+      <p>Cadastre-se gratuitamente e comece a trocar hoje mesmo.</p>
+      <a href="/auth/registro" class="btn-primary btn-lg">Criar conta agora</a>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

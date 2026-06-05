@@ -1,0 +1,102 @@
+<%- include('../partials/header') %>
+
+<div class="page-livros">
+  <div class="container">
+    <div class="page-top">
+      <h1>Explorar livros</h1>
+      <% if (userId) { %>
+        <a href="/livros/novo" class="btn-primary">+ Anunciar</a>
+      <% } %>
+    </div>
+
+    <% if (query.success) { %>
+      <div class="alert alert-success">✅ Livro anunciado com sucesso!</div>
+    <% } %>
+
+    <!-- Filtros -->
+    <form action="/livros" method="GET" class="filtros-form" id="filtrosForm">
+      <div class="filtros-inner">
+        <div class="search-field">
+          <span class="search-icon">🔍</span>
+          <input type="text" name="busca" placeholder="Buscar por título ou autor..."
+                 value="<%= query.busca || '' %>" />
+        </div>
+        <select name="categoria">
+          <option value="">Todas as categorias</option>
+          <option value="livro" <%= query.categoria==='livro'?'selected':'' %>>Livros</option>
+          <option value="apostila" <%= query.categoria==='apostila'?'selected':'' %>>Apostilas</option>
+          <option value="revista" <%= query.categoria==='revista'?'selected':'' %>>Revistas</option>
+          <option value="outro" <%= query.categoria==='outro'?'selected':'' %>>Outros</option>
+        </select>
+        <select name="condicao">
+          <option value="">Qualquer condição</option>
+          <option value="novo" <%= query.condicao==='novo'?'selected':'' %>>Novo</option>
+          <option value="otimo" <%= query.condicao==='otimo'?'selected':'' %>>Ótimo</option>
+          <option value="bom" <%= query.condicao==='bom'?'selected':'' %>>Bom</option>
+          <option value="regular" <%= query.condicao==='regular'?'selected':'' %>>Regular</option>
+        </select>
+        <select name="modalidade">
+          <option value="">Troca ou doação</option>
+          <option value="troca" <%= query.modalidade==='troca'?'selected':'' %>>Apenas troca</option>
+          <option value="doacao" <%= query.modalidade==='doacao'?'selected':'' %>>Apenas doação</option>
+        </select>
+        <button type="submit" class="btn-filter">Filtrar</button>
+        <a href="/livros" class="btn-clear">Limpar</a>
+      </div>
+    </form>
+
+    <p class="result-count"><strong><%= total %></strong> livro(s) encontrado(s)</p>
+
+    <% if (livros.length === 0) { %>
+      <div class="empty-state big">
+        <span>🔍</span>
+        <p>Nenhum livro encontrado com esses filtros.</p>
+        <a href="/livros" class="btn-ghost">Ver todos</a>
+      </div>
+    <% } else { %>
+      <div class="livros-grid">
+        <% livros.forEach(livro => { %>
+          <a href="/livros/<%= livro.id %>" class="card-livro">
+            <div class="card-capa">
+              <% if (livro.capa) { %>
+                <img src="<%= livro.capa %>" alt="<%= livro.titulo %>" loading="lazy" />
+              <% } else { %>
+                <div class="capa-placeholder"><span>📕</span></div>
+              <% } %>
+              <span class="badge-modalidade <%= livro.modalidade %>">
+                <%= livro.modalidade === 'doacao' ? '🎁 Doação' : '🔄 Troca' %>
+              </span>
+            </div>
+            <div class="card-info">
+              <h3><%= livro.titulo %></h3>
+              <p class="card-autor"><%= livro.autor || 'Autor não informado' %></p>
+              <p class="card-inst">🏫 <%= livro.dono_inst || '—' %></p>
+              <div class="card-meta">
+                <span class="badge-condicao <%= livro.condicao %>"><%= livro.condicao %></span>
+                <span class="badge-cat"><%= livro.categoria %></span>
+              </div>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+
+      <!-- Paginação -->
+      <% if (pages > 1) { %>
+        <div class="pagination">
+          <% if (page > 1) { %>
+            <a href="/livros?<%= new URLSearchParams({...query, page: page-1}) %>" class="page-btn">← Anterior</a>
+          <% } %>
+          <% for(let i = 1; i <= pages; i++) { %>
+            <a href="/livros?<%= new URLSearchParams({...query, page: i}) %>"
+               class="page-btn <%= i === page ? 'active' : '' %>"><%= i %></a>
+          <% } %>
+          <% if (page < pages) { %>
+            <a href="/livros?<%= new URLSearchParams({...query, page: page+1}) %>" class="page-btn">Próximo →</a>
+          <% } %>
+        </div>
+      <% } %>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

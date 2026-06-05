@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | TrocaLivros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <span class="logo-icon">📚</span>
+      <span class="logo-text">Troca<strong>Livros</strong></span>
+    </a>
+    <div class="nav-links">
+      <a href="/livros">Explorar</a>
+      <% if (userId) { %>
+        <a href="/livros/novo" class="btn-nav-outline">+ Anunciar</a>
+        <a href="/dashboard" class="btn-nav">Meu Painel</a>
+        <a href="/auth/logout" class="nav-logout">Sair</a>
+      <% } else { %>
+        <a href="/auth/login">Entrar</a>
+        <a href="/auth/registro" class="btn-nav">Criar conta</a>
+      <% } %>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>

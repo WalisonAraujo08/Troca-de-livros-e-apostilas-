@@ -1,0 +1,136 @@
+<%- include('partials/header') %>
+
+<div class="page-dashboard">
+  <div class="container">
+    <div class="dash-header">
+      <div>
+        <h1>Olá, <span class="dash-name"><%= userName %></span> 👋</h1>
+        <p><%= usuario.curso %> • <%= usuario.instituicao %></p>
+      </div>
+      <a href="/livros/novo" class="btn-primary">+ Anunciar livro</a>
+    </div>
+
+    <% if (query && query.aceita) { %>
+      <div class="alert alert-success">✅ Proposta aceita! Combine a entrega com o estudante.</div>
+    <% } %>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="meus">📚 Meus livros (<%= meusLivros.length %>)</button>
+      <button class="tab" data-tab="recebidas">📬 Propostas recebidas (<%= propostasRecebidas.length %>)</button>
+      <button class="tab" data-tab="enviadas">📤 Propostas enviadas (<%= propostasEnviadas.length %>)</button>
+      <button class="tab" data-tab="favoritos">♡ Favoritos (<%= favoritos.length %>)</button>
+    </div>
+
+    <!-- Meus livros -->
+    <div class="tab-content active" id="tab-meus">
+      <% if (meusLivros.length === 0) { %>
+        <div class="empty-state">
+          <span>📚</span>
+          <p>Você ainda não anunciou nenhum livro.</p>
+          <a href="/livros/novo" class="btn-primary">Anunciar agora</a>
+        </div>
+      <% } else { %>
+        <div class="livros-grid">
+          <% meusLivros.forEach(livro => { %>
+            <div class="card-livro-dash">
+              <a href="/livros/<%= livro.id %>" class="card-link">
+                <div class="card-capa small">
+                  <% if (livro.capa) { %>
+                    <img src="<%= livro.capa %>" alt="<%= livro.titulo %>" />
+                  <% } else { %>
+                    <div class="capa-placeholder"><span>📕</span></div>
+                  <% } %>
+                </div>
+                <div class="card-info">
+                  <h3><%= livro.titulo %></h3>
+                  <p><%= livro.autor || '—' %></p>
+                  <span class="badge-status <%= livro.status %>"><%= livro.status %></span>
+                </div>
+              </a>
+              <form action="/livros/<%= livro.id %>/deletar" method="POST" onsubmit="return confirm('Remover este anúncio?')">
+                <button type="submit" class="btn-sm-danger">🗑 Remover</button>
+              </form>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Propostas recebidas -->
+    <div class="tab-content" id="tab-recebidas">
+      <% if (propostasRecebidas.length === 0) { %>
+        <div class="empty-state"><span>📬</span><p>Nenhuma proposta pendente.</p></div>
+      <% } else { %>
+        <div class="propostas-list">
+          <% propostasRecebidas.forEach(p => { %>
+            <div class="proposta-card">
+              <div class="proposta-info">
+                <p><strong><%= p.solicitante_nome %></strong> quer: <em><%= p.livro_titulo %></em></p>
+                <% if (p.livro_oferecido_titulo) { %>
+                  <p>📦 Oferece em troca: <strong><%= p.livro_oferecido_titulo %></strong></p>
+                <% } %>
+                <% if (p.mensagem) { %><p class="proposta-msg">"<%= p.mensagem %>"</p><% } %>
+                <p class="proposta-contact">📧 <%= p.solicitante_email %> • <%= p.solicitante_curso %></p>
+              </div>
+              <div class="proposta-actions">
+                <form action="/propostas/<%= p.id %>/aceitar" method="POST">
+                  <button type="submit" class="btn-success">✅ Aceitar</button>
+                </form>
+                <form action="/propostas/<%= p.id %>/recusar" method="POST">
+                  <button type="submit" class="btn-danger-sm">✗ Recusar</button>
+                </form>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Propostas enviadas -->
+    <div class="tab-content" id="tab-enviadas">
+      <% if (propostasEnviadas.length === 0) { %>
+        <div class="empty-state"><span>📤</span><p>Você ainda não enviou propostas.</p></div>
+      <% } else { %>
+        <div class="propostas-list">
+          <% propostasEnviadas.forEach(p => { %>
+            <div class="proposta-card">
+              <p>Livro: <a href="/livros/<%= p.livro_solicitado_id %>"><em><%= p.livro_titulo %></em></a></p>
+              <p>Dono: <strong><%= p.dono_nome %></strong></p>
+              <% if (p.mensagem) { %><p class="proposta-msg">"<%= p.mensagem %>"</p><% } %>
+              <span class="badge-status <%= p.status %>"><%= p.status %></span>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Favoritos -->
+    <div class="tab-content" id="tab-favoritos">
+      <% if (favoritos.length === 0) { %>
+        <div class="empty-state"><span>♡</span><p>Você não tem favoritos ainda.</p></div>
+      <% } else { %>
+        <div class="livros-grid">
+          <% favoritos.forEach(livro => { %>
+            <a href="/livros/<%= livro.id %>" class="card-livro">
+              <div class="card-capa">
+                <% if (livro.capa) { %>
+                  <img src="<%= livro.capa %>" alt="<%= livro.titulo %>" />
+                <% } else { %>
+                  <div class="capa-placeholder"><span>📕</span></div>
+                <% } %>
+              </div>
+              <div class="card-info">
+                <h3><%= livro.titulo %></h3>
+                <p><%= livro.dono_nome %></p>
+              </div>
+            </a>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+
+  </div>
+</div>
+
+<%- include('partials/footer') %>

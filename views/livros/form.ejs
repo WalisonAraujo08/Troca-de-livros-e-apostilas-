@@ -1,0 +1,94 @@
+<%- include('../partials/header') %>
+
+<div class="page-form">
+  <div class="container container-sm">
+    <h1>Anunciar livro ou apostila</h1>
+    <p class="page-sub">Preencha os dados do seu livro para começar a trocar.</p>
+
+    <% if (errors.length > 0) { %>
+      <div class="alert alert-error">
+        <% errors.forEach(e => { %><p>⚠️ <%= e.msg %></p><% }); %>
+      </div>
+    <% } %>
+
+    <form action="/livros/novo" method="POST" enctype="multipart/form-data" class="main-form">
+      <div class="fields-row">
+        <div class="field">
+          <label for="titulo">Título *</label>
+          <input type="text" id="titulo" name="titulo"
+                 value="<%= livro ? livro.titulo : '' %>"
+                 placeholder="Ex: Cálculo Vol. 1" required />
+        </div>
+        <div class="field">
+          <label for="autor">Autor</label>
+          <input type="text" id="autor" name="autor"
+                 value="<%= livro ? livro.autor : '' %>"
+                 placeholder="Ex: James Stewart" />
+        </div>
+      </div>
+
+      <div class="fields-row">
+        <div class="field">
+          <label for="categoria">Categoria *</label>
+          <select name="categoria" id="categoria" required>
+            <option value="livro" <%= livro && livro.categoria==='livro'?'selected':'' %>>📗 Livro</option>
+            <option value="apostila" <%= livro && livro.categoria==='apostila'?'selected':'' %>>📄 Apostila</option>
+            <option value="revista" <%= livro && livro.categoria==='revista'?'selected':'' %>>📰 Revista</option>
+            <option value="outro" <%= livro && livro.categoria==='outro'?'selected':'' %>>📦 Outro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="condicao">Condição *</label>
+          <select name="condicao" id="condicao" required>
+            <option value="">Selecione...</option>
+            <option value="novo" <%= livro && livro.condicao==='novo'?'selected':'' %>>⭐ Novo</option>
+            <option value="otimo" <%= livro && livro.condicao==='otimo'?'selected':'' %>>✅ Ótimo</option>
+            <option value="bom" <%= livro && livro.condicao==='bom'?'selected':'' %>>👍 Bom</option>
+            <option value="regular" <%= livro && livro.condicao==='regular'?'selected':'' %>>🔄 Regular</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Modalidade *</label>
+        <div class="radio-group">
+          <label class="radio-card">
+            <input type="radio" name="modalidade" value="troca"
+                   <%= !livro || livro.modalidade==='troca' ? 'checked' : '' %> />
+            <span>🔄 Troca</span>
+            <small>Quero trocar por outro livro</small>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="modalidade" value="doacao"
+                   <%= livro && livro.modalidade==='doacao' ? 'checked' : '' %> />
+            <span>🎁 Doação</span>
+            <small>Quero doar gratuitamente</small>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="descricao">Descrição</label>
+        <textarea name="descricao" id="descricao" rows="4"
+                  placeholder="Descreva o estado, edição, se tem marcações, etc."><%= livro ? livro.descricao : '' %></textarea>
+      </div>
+
+      <div class="field">
+        <label for="capa">Foto da capa</label>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" name="capa" id="capa" accept="image/*" class="file-input" />
+          <div class="upload-placeholder">
+            <span>📷</span>
+            <p>Clique ou arraste uma imagem</p>
+            <small>JPG, PNG ou WEBP · Máx. 5MB</small>
+          </div>
+          <img id="previewImg" class="upload-preview" style="display:none" alt="Preview" />
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary btn-full btn-lg">📚 Publicar anúncio</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

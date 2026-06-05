@@ -1,0 +1,39 @@
+<%- include('../partials/header') %>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <a href="/" class="logo">📚 Troca<strong>Livros</strong></a>
+      <h1>Bem-vindo de volta</h1>
+      <p>Entre para ver suas trocas e favoritos</p>
+    </div>
+
+    <% if (errors.length > 0) { %>
+      <div class="alert alert-error">
+        <% errors.forEach(e => { %><p>⚠️ <%= e.msg %></p><% }); %>
+      </div>
+    <% } %>
+
+    <form action="/auth/login" method="POST" class="auth-form" id="loginForm" novalidate>
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" value="<%= old.email || '' %>"
+               placeholder="seu@email.com" required autocomplete="email" />
+        <span class="field-error" id="emailErr"></span>
+      </div>
+      <div class="field">
+        <label for="senha">Senha</label>
+        <div class="password-wrap">
+          <input type="password" id="senha" name="senha" placeholder="••••••" required autocomplete="current-password" />
+          <button type="button" class="toggle-pass" onclick="togglePass('senha')">👁</button>
+        </div>
+        <span class="field-error" id="senhaErr"></span>
+      </div>
+      <button type="submit" class="btn-primary btn-full">Entrar</button>
+    </form>
+
+    <p class="auth-switch">Ainda não tem conta? <a href="/auth/registro">Criar conta grátis</a></p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
