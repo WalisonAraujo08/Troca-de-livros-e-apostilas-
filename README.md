@@ -121,7 +121,7 @@ Acesse: **http://localhost:3000**
 ## ☁️ Deploy
 
 ### Banco de dados — Railway
-1. Crie uma conta em [railway.app](https://railway.app)
+1. Crie sua conta em [railway.app](https://railway.app)
 2. Novo projeto → Add MySQL
 3. Copie as credenciais para as variáveis de ambiente
 
